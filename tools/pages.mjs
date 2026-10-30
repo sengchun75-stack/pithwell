@@ -14,6 +14,7 @@ const DOCS = join(ROOT, 'docs');
 const D = JSON.parse(readFileSync(join(ROOT, 'tools', 'ring-data.json'), 'utf8'));
 const ORIGIN = 'https://pithwell.pages.dev';
 const DATE = '2026-10-30';
+const GSC_TAG = '3eEUicYrn6jQ879omto5AQuPLi1-5-p7dmGEGn7CC4Y';   // Search Console ownership tag for the home page; do not remove
 const MAILTO = 'mailto:studio@pithwell.example?subject=A%20timber%20sample';
 const NORTH = D.northRings, MAXR = D.maxRing;
 const PITH = [0.5953, 0.454];   // the visible pith, for the callout and the start of the core line
@@ -220,7 +221,7 @@ const HOME_FAQS = [['How can a ring give you a calendar year?', ANS_METHOD], ['W
 
 function home() {
   const p = {
-    path: '/', home: true, kind: 'WebPage', verify: process.env.GSC_TAG || '',
+    path: '/', home: true, kind: 'WebPage', verify: GSC_TAG,
     title: 'Pithwell | Tree-ring dating for old timber',
     desc: 'Pithwell dates old timber by its tree rings. Watch one section read from bark to pith, and see what a sample must show to give a felling year.',
     ogTitle: 'Count back from the bark', ogDesc: 'Tree-ring dating for old timber, shown by reading one cross-section from its newest ring to its pith.',
