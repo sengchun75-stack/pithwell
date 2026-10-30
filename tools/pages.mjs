@@ -22,7 +22,20 @@ const BOOT = "document.documentElement.className += ' js';";
 const BOOT_HASH = 'sha256-' + createHash('sha256').update(BOOT).digest('base64');
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-const plain = (h) => h.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/&times;/g, '×').replace(/&rsquo;/g, '’').replace(/&mdash;/g, '—').replace(/&ndash;/g, '–').replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/\s+/g, ' ').trim();
+// removes tags in one pass; a regex such as <[^>]+> can backtrack badly on odd input
+function stripTags(h, sep = '') {
+  let out = '', i = 0;
+  while (i < h.length) {
+    const a = h.indexOf('<', i);
+    if (a < 0) { out += h.slice(i); break; }
+    out += h.slice(i, a);
+    const b = h.indexOf('>', a);
+    if (b < 0) { out += h.slice(a); break; }
+    out += sep; i = b + 1;
+  }
+  return out;
+}
+const plain = (h) => stripTags(h).replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/&times;/g, '×').replace(/&rsquo;/g, '’').replace(/&mdash;/g, '—').replace(/&ndash;/g, '–').replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/\s+/g, ' ').trim();
 const words = (h) => plain(h).split(' ').filter(Boolean).length;
 function ans(h, who) { const n = words(h); if (n < 40 || n > 60) throw new Error(`answer of ${n} words (${who})`); return h; }
 

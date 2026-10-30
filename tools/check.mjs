@@ -46,12 +46,25 @@ for (const f of pages) {
     const types = j['@graph'].map(x => x['@type']);
     ok(`${f}: JSON-LD has WebSite, Organization, BreadcrumbList`, ['WebSite', 'Organization', 'BreadcrumbList'].every(x => types.includes(x)), types.join(','));
     ok(`${f}: JSON-LD has none of the forbidden types`, !/LocalBusiness|PostalAddress|telephone|aggregateRating|Review|Offer|"price"/.test(m[1]));
-    const org = j['@graph'].find(x => x['@type'] === 'Organization'); ok(`${f}: Organization is name, url, logo only`, Object.keys(org).filter(k => !k.startsWith('@')).sort().join() === 'logo,name,url');
+    const org = j['@graph'].find(x => x['@type'] === 'Organization'); ok(`${f}: Organization is name, url, logo only`, Object.keys(org).filter(k => !k.startsWith('@')).sort((p, q) => p.localeCompare(q)).join() === 'logo,name,url');
     const fq = j['@graph'].find(x => x['@type'] === 'FAQPage');
     if (fq) { const vis = plain(body); ok(`${f}: every FAQ answer is visible on the page`, fq.mainEntity.every(q => vis.includes(q.acceptedAnswer.text.slice(0, 60))), fq.mainEntity.length + ' Q&A'); ok(`${f}: FAQ answers are 40-60 words`, fq.mainEntity.every(q => { const n = q.acceptedAnswer.text.split(/\s+/).length; return n >= 40 && n <= 60; })); }
   }
 }
-function plain(h) { return h.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&rsquo;/g, '’').replace(/&#39;/g, "'").replace(/\s+/g, ' ').trim(); }
+// removes tags in one pass; a regex such as <[^>]+> can backtrack badly on odd input
+function stripTags(h, sep = '') {
+  let out = '', i = 0;
+  while (i < h.length) {
+    const a = h.indexOf('<', i);
+    if (a < 0) { out += h.slice(i); break; }
+    out += h.slice(i, a);
+    const b = h.indexOf('>', a);
+    if (b < 0) { out += h.slice(a); break; }
+    out += sep; i = b + 1;
+  }
+  return out;
+}
+function plain(h) { return stripTags(h, ' ').replace(/&amp;/g, '&').replace(/&rsquo;/g, '’').replace(/&#39;/g, "'").replace(/\s+/g, ' ').trim(); }
 function plainLen(h) { return plain(h).length; }
 function target(p) { const clean = p.replace(/\/$/, ''); return existsSync(join(DOCS, clean)) && statSync(join(DOCS, clean)).isFile() || existsSync(join(DOCS, clean + '.html')); }
 
@@ -64,7 +77,7 @@ ok('sitemap: 4 urls with lastmod', (sitemap.match(/<loc>/g) || []).length === 4 
 // contrast
 const css = readFileSync(join(DOCS, 'css', 'style.css'), 'utf8');
 const tok = Object.fromEntries([...css.matchAll(/--([a-z]+):\s*(#[0-9a-f]{6})/g)].map(m => [m[1], m[2]]));
-const lum = (hex) => { const c = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255).map(v => v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
+const lum = (hex) => { const c = [1, 3, 5].map(i => Number.parseInt(hex.slice(i, i + 2), 16) / 255).map(v => v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
 const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + .05) / (y + .05); };
 for (const [fg, bg, min] of [['ink', 'void', 4.5], ['mute', 'void', 4.5], ['cambium', 'void', 4.5], ['ink', 'panel', 4.5], ['mute', 'panel', 4.5], ['cambium', 'panel', 4.5], ['void', 'cambium', 4.5]]) { const r = ratio(tok[fg], tok[bg]); ok(`contrast ${fg} on ${bg} >= ${min}`, r >= min, r.toFixed(1) + ':1'); }
 

@@ -163,6 +163,6 @@ export function createStage(host, o) {
   document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else wake(); });
   new ResizeObserver(() => { if (api.ok && !lost) { size(); draw(); } }).observe(host);
 
-  init();
+  void init();
   return api;
 }

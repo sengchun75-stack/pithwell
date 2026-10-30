@@ -33,7 +33,7 @@ const { data } = await sharp(src).resize(S, S).greyscale().raw().toBuffer({ reso
 const g = Float32Array.from(data);
 const PITH = [PITH_UV[0] * S, PITH_UV[1] * S];
 const inside = (x, y) => x >= 0 && y >= 0 && x < S - 1 && y < S - 1;
-const at = (x, y) => { const x0 = x | 0, y0 = y | 0, fx = x - x0, fy = y - y0, i = y0 * S + x0; return g[i] * (1 - fx) * (1 - fy) + g[i + 1] * fx * (1 - fy) + g[i + S] * (1 - fx) * fy + g[i + S + 1] * fx * fy; };
+const at = (x, y) => { const x0 = Math.trunc(x), y0 = Math.trunc(y), fx = x - x0, fy = y - y0, i = y0 * S + x0; return g[i] * (1 - fx) * (1 - fy) + g[i + 1] * fx * (1 - fy) + g[i + S] * (1 - fx) * fy + g[i + S + 1] * fx * fy; };
 
 function fft(re, im, inv) {
   const n = re.length;
