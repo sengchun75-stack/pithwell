@@ -1,0 +1,23 @@
+# Pithwell
+
+> A concept website for a fictional tree-ring dating studio. The brand is fictional; the dendrochronology and the sources on these pages are real. One photographed tree section is read from its newest ring to its pith, and the pages explain what a ring can and cannot date.
+
+## Pages
+
+- [Home](https://pithwell.pages.dev/): one cross-section read from the bark inward, 43 whole rings in the frame and 38 along the core line, with seven questions answered.
+- [How crossdating works](https://pithwell.pages.dev/crossdating): matching wide and narrow rings against dated wood, why counting alone fails, and how a match is judged.
+- [1816 in tree rings](https://pithwell.pages.dev/the-year-without-a-summer): the Tambora eruption of 10 April 1815, what trees recorded in 1816, and the missing-ring dispute.
+- [What we can say about a timber](https://pithwell.pages.dev/timber-dating): bark edge, sapwood and heartwood-only results, and how many rings are enough.
+
+## Facts stated on the site
+
+- Dendrochronology assigns one calendar year to each ring by crossdating. Regional chronologies reach back more than 12,000 years (Laboratory of Tree-Ring Research, University of Arizona).
+- The International Tree-Ring Data Bank, run by NOAA, holds records from more than 5,000 sites on six continents.
+- Mount Tambora erupted on 10 April 1815. Northern Hemisphere temperatures dipped by about 0.7 to 0.8 °C in 1816 (St. George and Anchukaitis, PAGES Magazine, 2015).
+- Published sapwood estimates for English oak run from about 9 to 46 rings, depending on region and period.
+- The photographed section holds 43 whole rings in the frame and 38 along the line from the pith to the top edge. The photograph carries no calendar date.
+- Skeleton-plot figures on the crossdating page use invented widths and are labelled as such.
+
+## Contact
+
+The enquiry link is a plain mailto to a reserved example address. There are no forms, accounts, prices or payments.

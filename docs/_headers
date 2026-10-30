@@ -1,0 +1,44 @@
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-DamCoPgB/VkDCPsu0R6X4sJsz1c66vGlUGBXLu04Yxg='; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  ! Access-Control-Allow-Origin
+
+/img/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/fonts/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/css/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/js/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/crossdating
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/the-year-without-a-summer
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/timber-dating
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/404
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/llms.txt
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/robots.txt
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/sitemap.xml
+  Cache-Control: no-cache, no-store, must-revalidate

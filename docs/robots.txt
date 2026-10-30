@@ -1,0 +1,5 @@
+# Every search and answer crawler is welcome. Nothing here is private.
+User-agent: *
+Allow: /
+
+Sitemap: https://pithwell.pages.dev/sitemap.xml
