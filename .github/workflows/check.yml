@@ -1,0 +1,21 @@
+name: check
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Pages match their sources
+        run: |
+          node tools/pages.mjs
+          git diff --exit-code -- docs
+      - name: Static checks
+        run: node tools/check.mjs
