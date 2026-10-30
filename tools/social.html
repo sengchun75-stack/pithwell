@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Social images</title>
+<style>
+@font-face { font-family: 'EB Garamond'; src: url('../docs/fonts/eb-garamond-latin-wght-normal.woff2'); font-weight: 400 800; }
+@font-face { font-family: 'EB Garamond'; src: url('../docs/fonts/eb-garamond-latin-wght-italic.woff2'); font-weight: 400 800; font-style: italic; }
+@font-face { font-family: 'Sometype Mono'; src: url('../docs/fonts/sometype-mono-latin-wght-normal.woff2'); font-weight: 400 700; }
+html, body { margin: 0; background: #0a0c0a; color: #ece7d8; }
+.og { width: 1200px; height: 630px; position: relative; overflow: hidden; }
+.og img { position: absolute; right: -40px; top: 15px; width: 600px; height: 600px; -webkit-mask-image: radial-gradient(circle closest-side, #000 0 88%, transparent 100%); mask-image: radial-gradient(circle closest-side, #000 0 88%, transparent 100%); }
+.og .brand { position: absolute; left: 64px; top: 52px; font: italic 400 38px 'EB Garamond', serif; }
+.og .brand b { font-weight: 400; font-style: normal; color: #c6e07c; }
+.og h1 { position: absolute; left: 64px; bottom: 120px; margin: 0; width: 560px; font: 400 104px/.92 'EB Garamond', serif; letter-spacing: -.022em; }
+.og h1 em { color: #c6e07c; }
+.og .tag { position: absolute; left: 64px; bottom: 56px; font: 450 15px 'Sometype Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: #a8a595; }
+.mark { width: 512px; height: 512px; }
+</style>
+</head>
+<body>
+<div id="og" class="og" hidden>
+  <img src="og-disc.webp" alt="">
+  <div class="brand">Pith<b>well</b></div>
+  <h1>Count back <em>from the bark.</em></h1>
+  <div class="tag">Tree-ring dating for old timber</div>
+</div>
+<div id="mark" class="mark" hidden>
+  <svg viewBox="0 0 64 64" width="512" height="512"><rect width="64" height="64" fill="#0a0c0a"/><circle cx="32" cy="32" r="4" fill="#ece7d8"/><circle cx="32" cy="32" r="10" fill="none" stroke="#ece7d8" stroke-opacity=".7" stroke-width="2"/><circle cx="32" cy="32" r="17" fill="none" stroke="#ece7d8" stroke-opacity=".5" stroke-width="2"/><circle cx="32" cy="32" r="24" fill="none" stroke="#c6e07c" stroke-width="3"/></svg>
+</div>
+<script>document.getElementById(location.hash.slice(1)).hidden = false;</script>
+</body>
+</html>
