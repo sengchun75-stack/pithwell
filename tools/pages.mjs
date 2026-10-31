@@ -139,7 +139,9 @@ function resultSvg() {
 
 // ---------- page chrome ----------
 const NAV = [['/crossdating', 'Method'], ['/the-year-without-a-summer', '1816'], ['/timber-dating', 'Timber']];
-const header = (cur) => `<a class="skip" href="#main">Skip to content</a>
+const BACKDROP = '<div class="bg" aria-hidden="true"><div class="bg__still"></div><noscript><img class="bg__ns" src="/img/wood-still.webp" alt="" aria-hidden="true" width="1024" height="576" decoding="async"></noscript><video class="bg__v" muted loop playsinline preload="none" disablepictureinpicture tabindex="-1" data-webm="/video/loop.webm" data-mp4="/video/loop.mp4"></video></div>';
+const header = (cur) => `${BACKDROP}
+<a class="skip" href="#main">Skip to content</a>
 <header class="site">
   <a class="brand" href="/" aria-label="Pithwell, home">Pith<b>well</b></a>
   <nav class="nav mono" aria-label="Main">${NAV.map(([h, t]) => `<a href="${h}"${h === cur ? ' aria-current="page"' : ''}>${t}</a>`).join('')}<a class="ask" href="${MAILTO}">Ask</a></nav>
@@ -323,6 +325,7 @@ ${qsec('method', 'Method', 'How can a ring give you a <em>calendar year?</em>', 
 </main>
 ${footer}
 <script type="module" src="/js/main.js"></script>
+<script type="module" src="/js/bg.js"></script>
 </body>
 </html>
 `;
@@ -330,7 +333,7 @@ ${footer}
 }
 
 function article(p, bodyInner, cur) {
-  return head(p) + `\n<body>\n${header(cur)}\n<main id="main">\n  <header class="page-head ph-${p.core.n}"><div class="page-head__in">\n    ${crumbs(p.crumbTxt)}\n    <h1>${p.h1}</h1>\n    <p class="lede">${p.lede}</p>\n    <p class="meta mono">${p.meta}</p>\n  </div></header>${bodyInner.replace(/<h2([^>]*)>([\s\S]*?)<\/h2>/g, (m, a, b) => `<h2${a}>${b.replace(/<\/?em>/g, '')}</h2>`)}\n</main>\n${footer}\n${bodyInner.includes('data-slide') ? '<script type="module" src="/js/main.js"></script>\n' : ''}</body>\n</html>\n`;
+  return head(p) + `\n<body>\n${header(cur)}\n<main id="main">\n  <header class="page-head ph-${p.core.n}"><div class="page-head__in">\n    ${crumbs(p.crumbTxt)}\n    <h1>${p.h1}</h1>\n    <p class="lede">${p.lede}</p>\n    <p class="meta mono">${p.meta}</p>\n  </div></header>${bodyInner.replace(/<h2([^>]*)>([\s\S]*?)<\/h2>/g, (m, a, b) => `<h2${a}>${b.replace(/<\/?em>/g, '')}</h2>`)}\n</main>\n${footer}\n${bodyInner.includes('data-slide') ? '<script type="module" src="/js/main.js"></script>\n' : ''}<script type="module" src="/js/bg.js"></script>\n</body>\n</html>\n`;
 }
 
 function crossdating() {
@@ -427,7 +430,7 @@ ${qsec('building', 'Felling and building', 'Does a date tell you <em>when a buil
 
 function notFound() {
   const p = { path: '/404', title: 'Page not found | Pithwell', desc: 'There is no page at this address on Pithwell. The home page reads a tree-ring section from its bark to its pith.', crumbs: [['Home', '/']] };
-  const html = head({ ...p, kind: 'WebPage' }).replace('content="index, follow, max-image-preview:large"', 'content="noindex"').replace(/<link rel="canonical"[^>]*>\n/, '').replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>\n/, '') + `\n<body>\n${header('')}\n<main id="main">\n  <header class="page-head"><div class="page-head__in"><h1>No ring <em>for that year.</em></h1><p class="lede">There is no page at this address. The <a href="/">home page</a> is the place to start.</p></div></header>\n</main>\n${footer}\n</body>\n</html>\n`;
+  const html = head({ ...p, kind: 'WebPage' }).replace('content="index, follow, max-image-preview:large"', 'content="noindex"').replace(/<link rel="canonical"[^>]*>\n/, '').replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>\n/, '') + `\n<body>\n${header('')}\n<main id="main">\n  <header class="page-head"><div class="page-head__in"><h1>No ring <em>for that year.</em></h1><p class="lede">There is no page at this address. The <a href="/">home page</a> is the place to start.</p></div></header>\n</main>\n${footer}\n<script type="module" src="/js/bg.js"></script>\n</body>\n</html>\n`;
   return { p, html };
 }
 
@@ -479,7 +482,7 @@ const SECURITY = `/*
   ! Access-Control-Allow-Origin
 `;
 const NOCACHE = ['/', '/crossdating', '/the-year-without-a-summer', '/timber-dating', '/404', '/llms.txt', '/robots.txt', '/sitemap.xml'];
-writeFileSync(join(DOCS, '_headers'), SECURITY + ['/img/*', '/fonts/*', '/css/*', '/js/*'].map(p => `\n${p}\n  Cache-Control: public, max-age=86400, stale-while-revalidate=604800\n`).join('') + NOCACHE.map(p => `\n${p}\n  Cache-Control: no-cache, no-store, must-revalidate\n`).join(''));
+writeFileSync(join(DOCS, '_headers'), SECURITY + ['/img/*', '/video/*', '/fonts/*', '/css/*', '/js/*'].map(p => `\n${p}\n  Cache-Control: public, max-age=86400, stale-while-revalidate=604800\n`).join('') + NOCACHE.map(p => `\n${p}\n  Cache-Control: no-cache, no-store, must-revalidate\n`).join(''));
 
 console.log('pages written; boot hash', BOOT_HASH);
 for (const { p } of pages) console.log(p.path, 'title', p.title.length, 'desc', p.desc.length);

@@ -231,7 +231,7 @@ h1, h2 { text-wrap: balance; }
 .hero__stage::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(180deg, rgba(10, 12, 10, .55) 0%, rgba(10, 12, 10, .82) 60%, rgba(10, 12, 10, .94) 100%), url('/img/hero-bg.webp') center / cover no-repeat; }
 @media (min-width: 900px) { .hero__stage::before { background: linear-gradient(90deg, rgba(10, 12, 10, .96) 0%, rgba(10, 12, 10, .8) 38%, rgba(10, 12, 10, .3) 100%), url('/img/hero-bg.webp') 70% 50% / cover no-repeat; } }
 .page-head { position: relative; isolation: isolate; overflow: hidden; }
-.page-head::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(10, 12, 10, .96) 0%, rgba(10, 12, 10, .72) 55%, rgba(10, 12, 10, .4) 100%), linear-gradient(0deg, var(--void) 0%, rgba(10, 12, 10, 0) 45%), var(--bg) center / cover no-repeat; }
+.page-head::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(10, 12, 10, .96) 0%, rgba(10, 12, 10, .72) 55%, rgba(10, 12, 10, .4) 100%), var(--bg) center / cover no-repeat; }
 .ph-1 { --bg: url('/img/banner-1.webp'); }
 .ph-2 { --bg: url('/img/banner-2.webp'); }
 .ph-3 { --bg: url('/img/banner-3.webp'); }
@@ -239,3 +239,13 @@ h1, h2 { text-wrap: balance; }
 .cta__bg { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
 .cta::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(17, 20, 16, .9) 0%, rgba(17, 20, 16, .78) 100%); }
 .wrap { z-index: 1; }
+
+/* page-wide wood backdrop: one fixed layer behind everything. The still frame is requested only once the page
+   has loaded (so it never competes with the hero image), then the clip fades in over it */
+.bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+.bg__still, .bg__ns, .bg__v { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+.bg__still { opacity: 0; transition: opacity 1.2s ease; }
+.bg.ready .bg__still { opacity: 1; background: url('/img/wood-still.webp') center / cover no-repeat; }
+.bg__v { opacity: 0; transition: opacity 1.4s ease; }
+.bg__v.on { opacity: 1; }
+.bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 12, 10, .6) 0%, rgba(10, 12, 10, .7) 100%); }
