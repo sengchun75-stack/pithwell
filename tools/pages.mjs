@@ -239,7 +239,7 @@ function home() {
     desc: 'Pithwell dates old timber by its tree rings. Watch one section read from bark to pith, and see what a sample must show to give a felling year.',
     ogTitle: 'Count back from the bark', ogDesc: 'Tree-ring dating for old timber, shown by reading one cross-section from its newest ring to its pith.',
     crumbs: [['Home', '/']], faq: HOME_FAQS,
-    preload: `<link rel="preload" as="image" media="(max-width: 899px)" href="/img/disc-640.webp" imagesrcset="/img/disc-640.webp 640w, /img/disc-900.webp 900w" imagesizes="min(84vw, 360px)" fetchpriority="high">\n<link rel="preload" as="image" media="(min-width: 900px)" href="/img/disc-900.webp" imagesrcset="/img/disc-900.webp 900w, /img/disc-1400.webp 1400w" imagesizes="58vw" fetchpriority="high">\n`,
+    preload: `<link rel="preload" as="image" media="(max-width: 899px)" href="/img/disc-640.webp" imagesrcset="/img/disc-640.webp 640w, /img/disc-900.webp 900w" imagesizes="min(84vw, 360px)" fetchpriority="high">\n<link rel="preload" as="image" media="(min-width: 900px)" href="/img/disc-900.webp" imagesrcset="/img/disc-900.webp 900w, /img/disc-1400.webp 1400w" imagesizes="58vw" fetchpriority="high">\n<link rel="preload" as="image" href="/img/hero-bg.webp">\n`,
   };
   const body = `<body>
 ${header('')}
@@ -307,7 +307,7 @@ ${qsec('method', 'Method', 'How can a ring give you a <em>calendar year?</em>', 
     </div>
   </section>
   <section class="cta" id="enquire" aria-labelledby="h-enq">
-    <img class="cta__core" src="/img/core-3.webp" width="1269" height="70" loading="lazy" decoding="async" alt="A narrow strip of the outer rings of the same wood, laid flat like a core sample.">
+    <img class="cta__bg" src="/img/banner-3.webp" width="1200" height="466" alt="" aria-hidden="true" loading="lazy" decoding="async">
     <div class="cta__in">
       <h2 id="h-enq">Ask about <em>a sample</em></h2>
       <p class="ans">Tell us what the timber is, where it came from and whether any bark edge or pale sapwood survives. A photograph of the cut end, with a ruler beside it, is the best first step.</p>
@@ -330,7 +330,7 @@ ${footer}
 }
 
 function article(p, bodyInner, cur) {
-  return head(p) + `\n<body>\n${header(cur)}\n<main id="main">\n  <header class="page-head"><div class="page-head__in">\n    ${crumbs(p.crumbTxt)}\n    <h1>${p.h1}</h1>\n    <p class="lede">${p.lede}</p>\n    <figure class="coreband"><img src="/img/core-${p.core.n}.webp" width="${p.core.w}" height="70" decoding="async" alt="A narrow strip of the same wood laid flat like a core sample: vertical bands of pale earlywood alternating with dark, dense latewood."><figcaption class="mono">Rings ${p.core.r} of the section on the home page, laid flat as a core. Pith on the left, newer wood on the right.</figcaption></figure>\n    <p class="meta mono">${p.meta}</p>\n  </div></header>${bodyInner.replace(/<h2([^>]*)>([\s\S]*?)<\/h2>/g, (m, a, b) => `<h2${a}>${b.replace(/<\/?em>/g, '')}</h2>`)}\n</main>\n${footer}\n${bodyInner.includes('data-slide') ? '<script type="module" src="/js/main.js"></script>\n' : ''}</body>\n</html>\n`;
+  return head(p) + `\n<body>\n${header(cur)}\n<main id="main">\n  <header class="page-head ph-${p.core.n}"><div class="page-head__in">\n    ${crumbs(p.crumbTxt)}\n    <h1>${p.h1}</h1>\n    <p class="lede">${p.lede}</p>\n    <p class="meta mono">${p.meta}</p>\n  </div></header>${bodyInner.replace(/<h2([^>]*)>([\s\S]*?)<\/h2>/g, (m, a, b) => `<h2${a}>${b.replace(/<\/?em>/g, '')}</h2>`)}\n</main>\n${footer}\n${bodyInner.includes('data-slide') ? '<script type="module" src="/js/main.js"></script>\n' : ''}</body>\n</html>\n`;
 }
 
 function crossdating() {

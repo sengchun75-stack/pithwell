@@ -6,8 +6,9 @@
  *                         R holds the high 8 bits and the top nibble of G the low
  *                         4 bits of a 12-bit value: ring number / TMAX.
  *   img/loupe.webp      - a crop of the native frame, six rings at full detail
- *   img/core-1..3.webp  - three segments of the north radius laid flat as a core:
- *                         pith on the left, newest ring on the right
+ *   img/banner-1..3.webp - three dimmed regions of the native frame, backdrops for the
+ *                         article headers and the closing panel
+ *   img/hero-bg.webp    - the whole section, softened and dimmed, the home hero backdrop
  *   tools/ring-data.json - pith position, ring boundaries along the north radius
  *
  * Rings are followed by phase. Along each of 720 rays leaving the pith the
@@ -145,11 +146,12 @@ if (native) {
   await grade(sharp(native).extract({ left: Math.round(PITH[0] * f - 360), top: Math.round((PITH[1] - 560) * f), width: 720, height: 480 })).webp({ quality: 76, effort: 6 }).toFile(join(out, 'loupe.webp'));
 }
 if (native) {
-  const m = await sharp(native).metadata(); const f = m.width;      // native frame is square
-  const x = Math.round(PITH_UV[0] * f);
-  for (const [i, [r0, r1]] of [[1, 20], [10, 29], [19, 38]].entries()) {
-    const y0 = Math.round(ticks[r1 - 1].v * f), y1 = Math.round(ticks[r0 - 1].v * f);
-    await grade(sharp(native).extract({ left: x - 35, top: y0, width: 70, height: y1 - y0 }).rotate(90)).webp({ quality: 74, effort: 6 }).toFile(join(out, `core-${i + 1}.webp`));
+  // page backdrops: three regions of the native frame, dimmed so text can sit on them
+  const dim = (img, k, w, h) => img.resize(w, h, { fit: 'cover' }).linear(k, 0).modulate({ saturation: 0.9 });
+  for (const [n, left, top] of [[1, 2300, 1900], [2, 3300, 300], [3, 2000, 4300]]) {
+    await dim(sharp(native).extract({ left, top, width: 1800, height: 700 }), 0.6, 1200, 466).webp({ quality: 38, effort: 6 }).toFile(join(out, `banner-${n}.webp`));
   }
 }
+// home hero backdrop: the whole section, softened and dimmed
+await sharp(src).resize(800, 800).blur(2).linear(0.5, 0).modulate({ saturation: 0.9 }).webp({ quality: 42, effort: 6 }).toFile(join(out, 'hero-bg.webp'));
 console.log(JSON.stringify({ TMAX, northRings: ticks.length, maxRing: Math.floor(tDisc - 0.5) }));

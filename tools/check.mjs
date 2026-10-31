@@ -31,7 +31,7 @@ for (const f of pages) {
   ok(`${f}: exactly one h1`, h.filter(x => x === 1).length === 1);
   ok(`${f}: heading order never skips`, h.every((x, i) => i === 0 || x <= h[i - 1] + 1), h.join(''));
   const imgs = [...body.matchAll(/<img\b[^>]*>/g)].map(m => m[0]);
-  ok(`${f}: every img has alt, width, height`, imgs.every(i => /\balt="[^"]+"/.test(i) && /\bwidth="/.test(i) && /\bheight="/.test(i)), imgs.length + ' imgs');
+  ok(`${f}: every img has alt, width, height`, imgs.every(i => (/\balt="[^"]+"/.test(i) || (/\balt=""/.test(i) && /aria-hidden="true"/.test(i))) && /\bwidth="/.test(i) && /\bheight="/.test(i)), imgs.length + ' imgs');
   ok(`${f}: no inline style attribute`, !/\sstyle="/.test(html));
   ok(`${f}: landmarks main, header, nav, footer`, ['<main', '<header', '<nav', '<footer'].every(x => body.includes(x)));
   ok(`${f}: raw HTML carries real text`, plainLen(body) > (is404 ? 200 : 2500), plainLen(body) + ' chars');
