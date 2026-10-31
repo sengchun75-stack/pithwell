@@ -4,6 +4,7 @@
  * usage: node tools/check.mjs
  */
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -35,6 +36,10 @@ for (const f of pages) {
   ok(`${f}: no inline style attribute`, !/\sstyle="/.test(html));
   ok(`${f}: landmarks main, header, nav, footer`, ['<main', '<header', '<nav', '<footer'].every(x => body.includes(x)));
   ok(`${f}: raw HTML carries real text`, plainLen(body) > (is404 ? 200 : 2500), plainLen(body) + ' chars');
+  // the stylesheet and scripts are cached for a day, so their URLs must carry a hash of their content
+  const hashOf = (...fs) => { const h = createHash('sha256'); for (const x of fs) h.update(readFileSync(join(DOCS, x))); return h.digest('hex').slice(0, 10); };
+  ok(`${f}: stylesheet URL carries the current content hash`, html.includes(`href="/css/style.css?v=${hashOf('css/style.css')}"`));
+  ok(`${f}: script URLs carry the current content hash`, [...html.matchAll(/src="\/js\/[a-z]+\.js([^"]*)"/g)].every(m => m[1] === `?v=${hashOf('js/main.js', 'js/stage.js', 'js/slide.js', 'js/bg.js')}`));
   // links
   const hrefs = [...body.matchAll(/(?:href|src)="([^"]+)"/g)].map(m => m[1]);
   const bad = hrefs.filter(x => x.startsWith('/') && !x.startsWith('//')).map(x => x.split('#')[0].split('?')[0]).filter(x => x && x !== '/' && !target(x));

@@ -437,7 +437,11 @@ function notFound() {
 // ---------- write ----------
 const pages = [home(), crossdating(), year1816(), timber()];
 const files = { 'index.html': pages[0].html, 'crossdating.html': pages[1].html, 'the-year-without-a-summer.html': pages[2].html, 'timber-dating.html': pages[3].html, '404.html': notFound().html };
-for (const [f, h] of Object.entries(files)) writeFileSync(join(DOCS, f), h);
+// asset URLs carry a content hash, so a browser that cached the stylesheet or scripts can never pair them with newer markup
+const hashOf = (...fs) => { const h = createHash('sha256'); for (const f of fs) h.update(readFileSync(join(DOCS, f))); return h.digest('hex').slice(0, 10); };
+const CSS_V = hashOf('css/style.css'), JS_V = hashOf('js/main.js', 'js/stage.js', 'js/slide.js', 'js/bg.js');
+const versioned = (h) => h.replace('href="/css/style.css"', `href="/css/style.css?v=${CSS_V}"`).replace(/src="\/js\/(main|bg)\.js"/g, (m, n) => `src="/js/${n}.js?v=${JS_V}"`);
+for (const [f, h] of Object.entries(files)) writeFileSync(join(DOCS, f), versioned(h));
 
 writeFileSync(join(DOCS, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -482,7 +486,7 @@ const SECURITY = `/*
   ! Access-Control-Allow-Origin
 `;
 const NOCACHE = ['/', '/crossdating', '/the-year-without-a-summer', '/timber-dating', '/404', '/llms.txt', '/robots.txt', '/sitemap.xml'];
-writeFileSync(join(DOCS, '_headers'), SECURITY + ['/img/*', '/video/*', '/fonts/*', '/css/*', '/js/*'].map(p => `\n${p}\n  Cache-Control: public, max-age=86400, stale-while-revalidate=604800\n`).join('') + NOCACHE.map(p => `\n${p}\n  Cache-Control: no-cache, no-store, must-revalidate\n`).join(''));
+writeFileSync(join(DOCS, '_headers'), SECURITY + ['/img/*', '/video/*', '/fonts/*', '/css/*'].map(p => `\n${p}\n  Cache-Control: public, max-age=86400, stale-while-revalidate=604800\n`).join('') + '\n/js/*\n  Cache-Control: public, no-cache\n' + NOCACHE.map(p => `\n${p}\n  Cache-Control: no-cache, no-store, must-revalidate\n`).join(''));
 
 console.log('pages written; boot hash', BOOT_HASH);
 for (const { p } of pages) console.log(p.path, 'title', p.title.length, 'desc', p.desc.length);
