@@ -249,3 +249,11 @@ h1, h2 { text-wrap: balance; }
 .bg__v { opacity: 0; transition: opacity 1.4s ease; }
 .bg__v.on { opacity: 1; }
 .bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 12, 10, .6) 0%, rgba(10, 12, 10, .7) 100%); }
+
+/* per-section backdrops: each section has its own crop of the photograph. The crop fades out at the top and bottom so
+   sections melt into the moving clip behind them, and a scrim keeps the text readable */
+.sec { isolation: isolate; }
+.sec__bg { position: absolute; inset: 0; z-index: -2; background: center / cover no-repeat; opacity: 0; transition: opacity 1s ease; -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 24%, #000 76%, transparent 100%); mask-image: linear-gradient(180deg, transparent 0, #000 24%, #000 76%, transparent 100%); }
+.sec__bg.on { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .sec__bg { transition: none; } }
+.sec::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(180deg, rgba(10, 12, 10, .58) 0%, rgba(10, 12, 10, .68) 100%); }

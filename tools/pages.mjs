@@ -441,7 +441,12 @@ const files = { 'index.html': pages[0].html, 'crossdating.html': pages[1].html, 
 const hashOf = (...fs) => { const h = createHash('sha256'); for (const f of fs) h.update(readFileSync(join(DOCS, f))); return h.digest('hex').slice(0, 10); };
 const CSS_V = hashOf('css/style.css'), JS_V = hashOf('js/main.js', 'js/stage.js', 'js/slide.js', 'js/bg.js');
 const versioned = (h) => h.replace('href="/css/style.css"', `href="/css/style.css?v=${CSS_V}"`).replace(/src="\/js\/(main|bg)\.js"/g, (m, n) => `src="/js/${n}.js?v=${JS_V}"`);
-for (const [f, h] of Object.entries(files)) writeFileSync(join(DOCS, f), versioned(h));
+// every content section gets its own backdrop, numbered across the pages in order so no two sections share one;
+// bg.js fetches each one after the page has loaded, as it nears the viewport, so none can hold up the first paint
+let secN = 0;
+const withBackdrops = (h) => h.replace(/(<section class="sec"[^>]*>)/g, (m) => `${m}\n<div class="sec__bg" data-src="/img/sec-${++secN}.webp" aria-hidden="true"></div>`);
+for (const [f, h] of Object.entries(files)) writeFileSync(join(DOCS, f), versioned(withBackdrops(h)));
+if (secN !== 19) throw new Error('expected 19 section backdrops, placed ' + secN);
 
 writeFileSync(join(DOCS, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

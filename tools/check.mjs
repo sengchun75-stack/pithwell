@@ -12,6 +12,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DOCS = join(ROOT, 'docs');
 const ORIGIN = 'https://pithwell.pages.dev';
 const pages = readdirSync(DOCS).filter(f => f.endsWith('.html'));
+const allLazy = [];
 const res = []; const ok = (name, c, extra = '') => res.push([c, name + (extra ? ' - ' + extra : '')]);
 const strip = (h) => h.replace(/<script[\s\S]*?<\/script>/g, '').replace(/<style[\s\S]*?<\/style>/g, '');
 const sitemap = readFileSync(join(DOCS, 'sitemap.xml'), 'utf8');
@@ -45,6 +46,8 @@ for (const f of pages) {
   const bad = hrefs.filter(x => x.startsWith('/') && !x.startsWith('//')).map(x => x.split('#')[0].split('?')[0]).filter(x => x && x !== '/' && !target(x));
   ok(`${f}: internal links and assets resolve`, bad.length === 0, bad.join(', '));
   ok(`${f}: external links carry rel noopener`, [...body.matchAll(/<a [^>]*href="https?:\/\/[^"]+"[^>]*>/g)].every(m => /rel="[^"]*noopener/.test(m[0])));
+  const lazy = [...body.matchAll(/data-src="([^"]+)"/g)].map(m => m[1]); allLazy.push(...lazy);
+  ok(`${f}: every section backdrop file exists`, lazy.every(x => target(x)), lazy.length + ' backdrops');
   // structured data
   for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
     let j; try { j = JSON.parse(m[1]); ok(`${f}: JSON-LD parses`, true); } catch (e) { ok(`${f}: JSON-LD parses`, false, e.message); continue; }
@@ -72,6 +75,8 @@ function stripTags(h, sep = '') {
 function plain(h) { return stripTags(h, ' ').replace(/&amp;/g, '&').replace(/&rsquo;/g, '’').replace(/&#39;/g, "'").replace(/\s+/g, ' ').trim(); }
 function plainLen(h) { return plain(h).length; }
 function target(p) { const clean = p.replace(/\/$/, ''); return existsSync(join(DOCS, clean)) && statSync(join(DOCS, clean)).isFile() || existsSync(join(DOCS, clean + '.html')); }
+
+ok('no two sections share a backdrop image', new Set(allLazy).size === allLazy.length && allLazy.length === 19, allLazy.length + ' backdrops, ' + new Set(allLazy).size + ' distinct');
 
 // files
 for (const f of ['robots.txt', 'llms.txt', 'sitemap.xml', '_headers', 'img/og.jpg', 'img/favicon.svg', 'img/logo-512.png', 'img/apple-touch-icon.png']) ok(`file ${f} exists`, existsSync(join(DOCS, f)));
